@@ -109,8 +109,8 @@ if __name__ == "__main__":
                 yt.download_mp3()
         
         elif yt.is_link:
-            choose_resolution()
             if mode == 2:
+                choose_resolution()
                 print(GREEN+"DOWNLOADING VIDEO"+RESET)
                 yt.download_video(chosen_resolution)
             elif mode == 1:
