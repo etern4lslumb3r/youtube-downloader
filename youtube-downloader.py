@@ -77,7 +77,7 @@ if __name__ == "__main__":
     RESET = Style.RESET_ALL
     
     while True:
-        search = input(CYAN+"Input URL or search for video: ")
+        search = input(CYAN+"Input URL or search for video: "+RESET)
         yt = YouTubeDownloader(search=search)
         print("Would you like to convert to MP3 or MP4?")
         print(RED+"1. MP3")
