@@ -58,7 +58,7 @@ class GUI:
         self.GREEN = Fore.GREEN
         self.RESET = Style.RESET_ALL
     
-    def clear():
+    def clear(self):
         return "\n"*150
     
     def inputURL_page(self):
@@ -70,13 +70,16 @@ class GUI:
     def askmode_page(self):
         global mode
         print(self.CYAN+ "What would you like to convert the video to?\n")
-        print(self.RED+"1. MP3")
-        print("2. MP4"+self.RESET)
+        print(self.YELLOW+"1. MP3")
+        print("2. MP4")
+        print(self.RED+"3. Back" +self.RESET)
         while True:
             try:
                 mode = int(input(self.YELLOW+"\n\nChoice: "+self.RESET))
-                if mode not in [1,2]:
+                if mode not in [1,2,3]:
                     continue
+                if mode == 3:
+                    return self.inputURL_page()
                 break
             except:
                 continue
@@ -108,8 +111,7 @@ class GUI:
         print(f"{self.YELLOW}Views:{self.RESET} {video.views}")
         print(f"{self.YELLOW}Length:{self.RESET} {timedelta(seconds=video.length)}")
         print(f"{self.YELLOW}Publish date:{self.RESET} {video.publish_date}")
-        
-        print(f"{self.YELLOW}What would you like to do?\n")
+        print(f"{self.YELLOW}\nWhat would you like to do?\n")
         print(f"{self.GREEN}1. Continue to download")
         print(f"{self.RED}2. Go back{self.RESET}")
         while True:
@@ -155,5 +157,5 @@ if __name__ == "__main__":
     gui = GUI()
     while True:
         gui.inputURL_page()
-        gui.clear()
+        print(gui.clear())
     
