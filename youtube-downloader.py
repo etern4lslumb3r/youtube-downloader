@@ -5,7 +5,8 @@ import colorama
 from datetime import timedelta
 from pytube.cli import on_progress
 import os
-
+import os.path
+from pathlib import Path
 
 
 class YouTubeDownloader(YouTube):
@@ -61,6 +62,20 @@ class GUI:
         self.GREEN = Fore.GREEN
         self.RESET = Style.RESET_ALL
     
+    def init_dirs(self):
+        curr_dir = os.getcwd()
+        
+        if not os.path.exists(curr_dir+"/downloaded_songs/"):
+            mp3_path = Path(curr_dir+"/downloaded_songs/.readme.txt")
+            mp3_path.parent.mkdir(exist_ok=True, parents=True)
+            mp3_path.write_text("This is where downloaded songs are stored")
+        
+        if not os.path.exists(curr_dir+"/downloaded_videos/"):
+            mp4_path = Path(curr_dir+"/downloaded_videos/.readme.txt")
+            mp4_path.parent.mkdir(exist_ok=True, parents=True)
+            mp4_path.write_text("This is where downloaded videos are stored.")
+        
+        
     def separate_conversions(self, separation_amount:int):
         print("\n"*separation_amount)
     
@@ -196,6 +211,8 @@ class GUI:
 if __name__ == "__main__":
     colorama.init()
     gui = GUI()
+    gui.init_dirs()
+    
     while True:
         gui.start()
         gui.separate_conversions(10)
