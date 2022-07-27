@@ -37,7 +37,7 @@ class YouTubeDownloader(YouTube):
     def download_video(self, resolution):
         streams = self.YT.streams.filter(res=f"{resolution}p", progressive=True)
         stream = streams[0]
-        stream.download(output_path=f"{os.getcwd()}/downloaded_videos/", filename=f"{self.YT.title}.mp4")
+        stream.download(output_path=f"{os.getcwd()}/downloaded_videos/", filename=f"{self.YT.title.replace('.', '-').replace('/','_').replace('|','')}.mp4")
 
     def download_mp3(self):
         highest_abr = 0
@@ -47,7 +47,7 @@ class YouTubeDownloader(YouTube):
             if highest_abr < abr:
                 highest_abr = abr
         highest_quality = available_streams.filter(abr=f"{highest_abr}kbps").first()
-        highest_quality.download(output_path=f"{os.getcwd()}/downloaded_songs/", filename=f"{self.YT.title.replace('.', '-')}.mp3")
+        highest_quality.download(output_path=f"{os.getcwd()}/downloaded_songs/", filename=f"{self.YT.title.replace('.', '-').replace('/','_').replace('|','')}.mp3")
    
         
 class GUI:
@@ -74,7 +74,7 @@ class GUI:
         return self.askmode_page()
             
     def askmode_page(self):
-        global mode
+        global mode, is_mp3
         print(self.CYAN+ "\n\nWhat would you like to convert the video to?\n")
         print(self.YELLOW+"1. MP3")
         print("2. MP4")
@@ -84,7 +84,11 @@ class GUI:
                 mode = int(input(self.YELLOW+"\n\nChoice: "+self.RESET))
                 if mode not in [1,2,3]:
                     continue
-                if mode == 3:
+                elif mode == 1:
+                    is_mp3 = True
+                elif mode == 2:
+                    is_mp3 = False
+                elif mode == 3:
                     return self.inputURL_page()
                 break
             except:
@@ -121,7 +125,11 @@ class GUI:
         print(f"{self.YELLOW}Length:{self.RESET} {timedelta(seconds=video.length)}")
         print(f"{self.YELLOW}Publish date:{self.RESET} {video.publish_date}")
         print(f"{self.YELLOW}\nWhat would you like to do?\n")
-        print(f"{self.GREEN}1. Continue to download")
+        if is_mp3:
+            print(f"{self.GREEN}1. Continue to download [MP3]")
+        else:
+            print(f"{self.GREEN}1. Continue to download [MP4]")
+            
         print(f"{self.RED}2. Go back{self.RESET}")
         print(f"{self.RED}3. Cancel{self.RESET}")
         while True:
@@ -131,11 +139,9 @@ class GUI:
                 #redeclare yt downloader object with valid url
                 yt = YouTubeDownloader(search=f"https://www.youtube.com/watch?v={video.video_id}")
                 if mode == 2: # mode 1 == mp3 || mode 2 == mp4
-                    is_mp3 = False
                     return self.choose_resolution()
                 elif mode == 1:
                     print(f"\n{self.GREEN}Starting download for {video.title}{self.RESET}\n")
-                    is_mp3 = True
                     return self.download_page()
             # if user wants to go back and user initially put a valid youtube link, return user to search input.
             elif choice == 2:
