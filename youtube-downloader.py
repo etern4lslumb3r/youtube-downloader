@@ -182,11 +182,11 @@ class GUI:
         
     def download_page(self, resolution=None):
         if is_mp3:
-            input(f"{self.GREEN}\nMP3 file is ready to be downloaded. Press Enter to start.{self.RESET}")
+            input(f"{self.GREEN}\nMP3 file is ready to be downloaded. Press Enter to start and wait{self.RESET}")
             yt.download_mp3()
             self.separate_prompts()
         elif not is_mp3:
-            input(f"{self.GREEN}\nMP4 file is ready to be downloaded. Press Enter to start.{self.RESET}")
+            input(f"{self.GREEN}\nMP4 file is ready to be downloaded. Press Enter to start and wait{self.RESET}")
             yt.download_video(resolution)
             self.separate_prompts()
         
