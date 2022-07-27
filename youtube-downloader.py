@@ -45,7 +45,7 @@ class YouTubeDownloader(YouTube):
 
     def download_mp3(self):
         highest_abr = 0
-        available_streams = self.YT.streams.filter(only_audio=True)
+        available_streams = self.YT.streams.filter(only_audio=True, progressive=False)
         for stream in available_streams:
             abr = int(stream.abr.strip("kbps"))
             if highest_abr < abr:
@@ -215,5 +215,5 @@ if __name__ == "__main__":
     
     while True:
         gui.start()
-        gui.separate_conversions(10)
+        gui.separate_conversions(5)
     
