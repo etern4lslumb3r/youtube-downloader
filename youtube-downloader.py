@@ -41,7 +41,7 @@ class YouTubeDownloader(YouTube):
     def download_video(self, resolution):
         streams = self.YT.streams.filter(res=f"{resolution}p", progressive=True)
         stream = streams[0]
-        stream.download(output_path=f"{os.getcwd()}/downloaded_videos/", filename=f"{self.YT.title.replace('.', '-').replace('/','_').replace('|','')}.mp4")
+        stream.download(output_path=f"{os.getcwd()}/downloaded_videos/", filename=f"{self.YT.title.replace('.', '-').replace('/','_').replace('|','').replace(':','-')}.mp4")
 
     def download_mp3(self):
         highest_abr = 0
@@ -51,7 +51,7 @@ class YouTubeDownloader(YouTube):
             if highest_abr < abr:
                 highest_abr = abr
         highest_quality = available_streams.filter(abr=f"{highest_abr}kbps").first()
-        highest_quality.download(output_path=f"{os.getcwd()}/downloaded_songs/", filename=f"{self.YT.title.replace('.', '-').replace('/','_').replace('|','')}.mp3")
+        highest_quality.download(output_path=f"{os.getcwd()}/downloaded_songs/", filename=f"{self.YT.title.replace('.', '-').replace('/','_').replace('|','').replace(':', '-')}.mp3")
    
         
 class GUI:
