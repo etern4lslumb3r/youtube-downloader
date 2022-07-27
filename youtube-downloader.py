@@ -48,21 +48,28 @@ class YouTubeDownloader(YouTube):
                 highest_abr = abr
         highest_quality = available_streams.filter(abr=f"{highest_abr}kbps").first()
         highest_quality.download(output_path=f"{os.getcwd()}/downloaded_songs/", filename=f"{self.YT.title.replace('.', '-')}.mp3")
+   
         
 class GUI:
-          
+    def __init__(self):
+        self.RED = Fore.RED
+        self.YELLOW = Fore.YELLOW
+        self.CYAN = Fore.CYAN
+        self.GREEN = Fore.GREEN
+        self.RESET = Style.RESET_ALL
+    
     def inputURL_page(self):
         global search_query, yt
-        search_query = input("Insert URL or search query here: ")
+        search_query = input(self.CYAN+"Insert URL or search query here: "+self.RESET)
         yt = YouTubeDownloader(search=search_query)
         return self.askmode_page()
             
     def askmode_page(self):
         global mode
-        print("What would you like to convert the video to?")
-        print("1. MP3")
-        print("2. MP4")
-        mode = input("\nChoice: ")
+        print(self.CYAN+ "What would you like to convert the video to?")
+        print(self.RED+"1. MP3")
+        print("2. MP4"+self.RESET)
+        mode = input(self.YELLOW+"\nChoice: "+self.RESET)
         if yt.is_link:
             return self.display_information(yt.YT)
         return self.display_suggestions()
@@ -70,7 +77,7 @@ class GUI:
     def display_suggestions(self):
         suggestions = yt.fetch_videos_from_search()
         for index, suggestion in enumerate(suggestions):
-            print(f"{index}: {suggestion.title} BY: {suggestion.author}")
+            print(f"{self.YELLOW}{index}{self.RESET}: {self.CYAN}{suggestion.title}{self.RESET} {self.RED}BY:{suggestion.author}{self.RESET}")
         while True:
             try:
                 choose_video = int(input("Input the index of your choice video: "))
@@ -86,17 +93,17 @@ class GUI:
     def display_information(self, video):
         global yt, is_mp3
         print("These are the following video details:")
-        print(f"Title: {video.title}")
-        print(f"Author: {video.author}")
-        print(f"Views: {video.views}")
-        print(f"Length: {timedelta(seconds=video.length)}")
-        print(f"Publish date: {video.publish_date}")
+        print(f"{self.YELLOW}Title:{self.RESET} {video.title}")
+        print(f"{self.YELLOW}Author:{self.RESET} {video.author}")
+        print(f"{self.YELLOW}Views:{self.RESET} {video.views}")
+        print(f"{self.YELLOW}Length:{self.RESET} {timedelta(seconds=video.length)}")
+        print(f"{self.YELLOW}Publish date:{self.RESET} {video.publish_date}")
         
-        print("What would you like to do?")
-        print("1. Continue to download")
-        print("2. Go back")
+        print(f"{self.YELLOW}What would you like to do?")
+        print(f"{self.GREEN}1. Continue to download")
+        print(f"{self.RED}2. Go back{self.RESET}")
         while True:
-            choice = int(input("Choice: "))
+            choice = int(input(f"{self.YELLOW}Choice: {self.RESET}"))
 
             if choice == 1:
                 #redeclare yt downloader object with valid url
@@ -105,40 +112,36 @@ class GUI:
                     is_mp3 = False
                     return self.choose_resolution()
                 else:
-                    print("Starting download for {}".format(video.title))
+                    print(f"{self.GREEN}Starting download for {video.format}{self.RESET}")
                     is_mp3 = True
                     return self.download_page()
             elif choice == 2:
+                if yt.is_link:
+                    return self.inputURL_page()
                 return self.display_suggestions()
             else:
                 continue
             continue
             
     def choose_resolution(self):
-        print("Available resolutions for download: ")
+        print(f"{self.CYAN}Available resolutions for download: ")
         resolutions = yt.fetch_available_resolutions()
+        print(f"{self.GREEN}{resolutions}{self.RESET}")
         chosen_resolution = int(input("Choose your resolution: "))
-        print("Starting download for {}".format(yt.YT.title))
+        print(f"{self.GREEN}Starting download for {yt.YT.title}{self.RESET}")
         return self.download_page(chosen_resolution)
         
     def download_page(self, resolution=None):
         if is_mp3:
-            input("MP3 file is ready to be downloaded. Press Enter to start.")
+            input(f"{self.GREEN}MP3 file is ready to be downloaded. Press Enter to start.{self.RESET}")
             yt.download_mp3()
         elif not is_mp3:
-            input("MP4 file is ready to be downloaded. Press Enter to start.")
+            input(f"{self.GREEN}MP4 file is ready to be downloaded. Press Enter to start.{self.RESET}")
             yt.download_video(resolution)
         
         
-
-
-
+        
 if __name__ == "__main__":
-    RED = Fore.RED
-    YELLOW = Fore.YELLOW
-    CYAN = Fore.CYAN
-    GREEN = Fore.GREEN
-    RESET = Style.RESET_ALL
     gui = GUI()
     gui.inputURL_page()
     
