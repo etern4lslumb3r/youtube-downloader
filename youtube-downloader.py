@@ -1,6 +1,7 @@
 from pytube import YouTube, Search
 import re
 from colorama import Style, Fore
+import colorama 
 from datetime import timedelta
 from pytube.cli import on_progress
 import os
@@ -173,6 +174,7 @@ class GUI:
         
         
 if __name__ == "__main__":
+    colorama.init()
     gui = GUI()
     while True:
         gui.start()
