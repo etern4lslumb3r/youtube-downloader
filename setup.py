@@ -11,4 +11,4 @@ setup( options = {"py2exe": {"compressed": 1, "optimize": 2, "ascii": 1, "bundle
        
        #Can use windows or console,replace my_file.py with py file you want to make exe off.
        #If not run in same folder give path /mydir/my_file.py
-       windows = [{"script": 'youtube-downloader.py'}])
+       console = [{"script": 'youtube-downloader.py'}])
