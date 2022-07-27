@@ -59,9 +59,13 @@ class GUI:
         self.GREEN = Fore.GREEN
         self.RESET = Style.RESET_ALL
     
-    def separate(self, separation_amount:int):
+    def separate_conversions(self, separation_amount:int):
         print("\n"*separation_amount)
     
+    def separate_prompts(self):
+        print(f"{self.GREEN}-----------------------------------------------------------------------------\n{self.RESET}")
+        
+        
     def start(self):
         return self.inputURL_page()
     
@@ -72,11 +76,12 @@ class GUI:
         if re.match(r' +', search_query) or len(search_query) == 0:
             self.inputURL_page()
         yt = YouTubeDownloader(search=search_query)
+        self.separate_prompts()
         return self.askmode_page()
             
     def askmode_page(self):
         global mode, is_mp3
-        print(self.CYAN+ "\n\nWhat would you like to convert the video to?\n")
+        print(self.CYAN+ "\nWhat would you like to convert the video to?\n")
         print(self.YELLOW+"1. MP3")
         print("2. MP4")
         print(self.RED+"3. Back" +self.RESET)
@@ -90,12 +95,15 @@ class GUI:
                 elif mode == 2:
                     is_mp3 = False
                 elif mode == 3:
+                    self.separate_prompts()
                     return self.inputURL_page()
                 break
             except:
                 continue
         if yt.is_link:
+            self.separate_prompts()
             return self.display_information(yt.YT)
+        self.separate_prompts()
         return self.display_suggestions()
         
     def display_suggestions(self):
@@ -105,21 +113,23 @@ class GUI:
         print(f"{self.YELLOW}{len(suggestions)}: {self.RED}Go back{self.RESET}")
         while True:
             try:
-                choose_video = int(input("Input the index of your choice video: "))
+                choose_video = int(input("\nInput the index of your choice video: "))
                 if choose_video < 0 or choose_video > len(suggestions)+1:
                     continue
                 if choose_video == len(suggestions):
+                    self.separate_prompts()
                     return self.askmode_page()
                 else:
                     break
             except:
                 continue
         chosen_video = suggestions[choose_video]
+        self.separate_prompts()
         return self.display_information(chosen_video)
 
     def display_information(self, video):
         global yt, is_mp3
-        print("\n\nThese are the following video details:\n")
+        print(f"{self.YELLOW}\nVideo details:\n")
         print(f"{self.YELLOW}Title:{self.RESET} {video.title}")
         print(f"{self.YELLOW}Author:{self.RESET} {video.author}")
         print(f"{self.YELLOW}Views:{self.RESET} {video.views}")
@@ -140,17 +150,22 @@ class GUI:
                 #redeclare yt downloader object with valid url
                 yt = YouTubeDownloader(search=f"https://www.youtube.com/watch?v={video.video_id}")
                 if mode == 2: # mode 1 == mp3 || mode 2 == mp4
+                    self.separate_prompts()
                     return self.choose_resolution()
                 elif mode == 1:
                     print(f"\n{self.GREEN}Starting download for {video.title}{self.RESET}\n")
+                    self.separate_prompts()
                     return self.download_page()
             # if user wants to go back and user initially put a valid youtube link, return user to search input.
             elif choice == 2:
                 if yt.is_link:
+                    self.separate_prompts()
                     return self.inputURL_page()
+                self.separate_prompts()
                 return self.display_suggestions()
             
             elif choice == 3:
+                self.separate_prompts()
                 return self.inputURL_page()
             else:
                 continue
@@ -162,15 +177,18 @@ class GUI:
         print(f"{self.GREEN}{resolutions}{self.RESET}")
         chosen_resolution = int(input("Choose your resolution: "))
         print(f"{self.GREEN}Starting download for {yt.YT.title}{self.RESET}")
+        self.separate_prompts()
         return self.download_page(chosen_resolution)
         
     def download_page(self, resolution=None):
         if is_mp3:
             input(f"{self.GREEN}\nMP3 file is ready to be downloaded. Press Enter to start.{self.RESET}")
             yt.download_mp3()
+            self.separate_prompts()
         elif not is_mp3:
             input(f"{self.GREEN}\nMP4 file is ready to be downloaded. Press Enter to start.{self.RESET}")
             yt.download_video(resolution)
+            self.separate_prompts()
         
         
 if __name__ == "__main__":
@@ -178,5 +196,5 @@ if __name__ == "__main__":
     gui = GUI()
     while True:
         gui.start()
-        gui.separate(10)
+        gui.separate_conversions(10)
     
