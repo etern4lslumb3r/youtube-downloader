@@ -58,8 +58,12 @@ class GUI:
         self.GREEN = Fore.GREEN
         self.RESET = Style.RESET_ALL
     
-    def clear(self):
-        return "\n"*150
+    def separate(self, separation_amount:int):
+        print("\n"*separation_amount)
+    
+    def start(self):
+        return self.inputURL_page()
+    
     
     def inputURL_page(self):
         global search_query, yt
@@ -91,11 +95,14 @@ class GUI:
         suggestions = yt.fetch_videos_from_search()
         for index, suggestion in enumerate(suggestions):
             print(f"{self.YELLOW}{index}{self.RESET}: {self.CYAN}{suggestion.title}{self.RESET} {self.RED}BY:{suggestion.author}{self.RESET}")
+        print(f"{self.YELLOW}{len(suggestions)}: {self.RED}Go back{self.RESET}")
         while True:
             try:
                 choose_video = int(input("Input the index of your choice video: "))
-                if choose_video < 0 or choose_video > len(suggestions):
+                if choose_video < 0 or choose_video > len(suggestions)+1:
                     continue
+                if choose_video == len(suggestions):
+                    return self.askmode_page()
                 else:
                     break
             except:
@@ -114,6 +121,7 @@ class GUI:
         print(f"{self.YELLOW}\nWhat would you like to do?\n")
         print(f"{self.GREEN}1. Continue to download")
         print(f"{self.RED}2. Go back{self.RESET}")
+        print(f"{self.RED}3. Cancel{self.RESET}")
         while True:
             choice = int(input(f"{self.YELLOW}\nChoice: {self.RESET}"))
 
@@ -132,6 +140,9 @@ class GUI:
                 if yt.is_link:
                     return self.inputURL_page()
                 return self.display_suggestions()
+            
+            elif choice == 3:
+                return self.inputURL_page()
             else:
                 continue
             continue
@@ -156,6 +167,6 @@ class GUI:
 if __name__ == "__main__":
     gui = GUI()
     while True:
-        gui.inputURL_page()
-        print(gui.clear())
+        gui.start()
+        gui.separate(10)
     
