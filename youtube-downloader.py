@@ -68,12 +68,14 @@ class GUI:
     def inputURL_page(self):
         global search_query, yt
         search_query = input(self.CYAN+"Insert URL or search query here: "+self.RESET)
+        if re.match(r' +', search_query) or len(search_query) == 0:
+            self.inputURL_page()
         yt = YouTubeDownloader(search=search_query)
         return self.askmode_page()
             
     def askmode_page(self):
         global mode
-        print(self.CYAN+ "What would you like to convert the video to?\n")
+        print(self.CYAN+ "\n\nWhat would you like to convert the video to?\n")
         print(self.YELLOW+"1. MP3")
         print("2. MP4")
         print(self.RED+"3. Back" +self.RESET)
