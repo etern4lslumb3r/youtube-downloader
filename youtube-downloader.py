@@ -161,8 +161,10 @@ class GUI:
         print(f"{self.RED}2. Go back{self.RESET}")
         print(f"{self.RED}3. Cancel{self.RESET}")
         while True:
-            choice = int(input(f"{self.YELLOW}\nChoice: {self.RESET}"))
-
+            try:
+              choice = int(input(f"{self.YELLOW}\nChoice: {self.RESET}"))
+            except:
+              continue
             if choice == 1:    # choice 1 = continue to download 
                 #redeclare yt downloader object with valid url
                 yt = YouTubeDownloader(search=f"https://www.youtube.com/watch?v={video.video_id}")
@@ -192,18 +194,23 @@ class GUI:
         print(f"{self.CYAN}Available resolutions for download: (Please Wait)\n")
         resolutions = yt.fetch_available_resolutions()
         print(f"{self.GREEN}{resolutions}{self.RESET}")
-        chosen_resolution = int(input("Choose your resolution: "))
+        while True:
+          try:
+            chosen_resolution = int(input("Choose your resolution: "))
+            break
+          except:
+            continue
         print(f"{self.GREEN}Starting download for {yt.YT.title}{self.RESET}")
         self.separate_prompts()
         return self.download_page(chosen_resolution)
         
     def download_page(self, resolution=None):
         if is_mp3:
-            input(f"{self.GREEN}\nMP3 file is ready to be downloaded. Press Enter to start and wait.\n")
+            input(f"{self.GREEN}\nMP3 file is ready to be downloaded. {self.RED}Press Enter to start and wait.{self.RESET}\n")
             print(f"Downloading...{self.RESET}")
             yt.download_mp3()
         elif not is_mp3:
-            input(f"{self.GREEN}\nMP4 file is ready to be downloaded. Press Enter to start and wait.\n")
+            input(f"{self.GREEN}\nMP4 file is ready to be downloaded. {self.RED}Press Enter to start and wait.{self.RESET}\n")
             print(f"Downloading...{self.RESET}")
             yt.download_video(resolution)
         
